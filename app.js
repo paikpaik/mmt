@@ -5,6 +5,7 @@ const path = require("path");
 const session = require("express-session");
 const nunjucks = require("nunjucks");
 const dotenv = require("dotenv");
+const pool = require("./config/mysql");
 
 dotenv.config();
 // 라우터
@@ -36,8 +37,20 @@ app.use(
 
 // 라우터
 app.use("/api", apiRouter);
-app.get("/", (req, res, next) => {
-  res.send("Hello mmt!");
+app.get("/", async (req, res) => {
+  try {
+    const connection = await pool.getConnection();
+    console.log("MySQL 연결 성공");
+
+    // 이런식으로 쿼리를 실행하거나 다른 작업을 수행할 수 있음.
+    // const results = await connection.query('SELECT * FROM mytable');
+
+    connection.release(); // 연결 해제
+    res.status(200).send("MySQL 연결 성공");
+  } catch (error) {
+    console.error("MySQL 연결 실패:", error);
+    res.status(500).send("MySQL 연결 실패");
+  }
 });
 
 app.use((req, res, next) => {
