@@ -7,7 +7,9 @@ if (envFound.error) {
 
 module.exports = {
   port: process.env.PORT,
+
   cookieSecret: process.env.COOKIE_SECRET,
+
   mysql: {
     host: process.env.DB_HOST,
     user: process.env.DB_USER,

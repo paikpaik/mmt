@@ -9,6 +9,7 @@ const pool = require("./config/mysql");
 
 // 라우터
 const apiRouter = require("./routes");
+
 const app = express();
 app.set("port", config.port || 3000);
 app.set("view engine", "html");
