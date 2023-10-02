@@ -1,10 +1,17 @@
+const PostService = require("../services/post.service");
+
 class PostController {
-  constructor(postService) {
-    this.postService = postService;
+  constructor() {
+    this.postService = new PostService();
   }
 
   getAllPosts = async (req, res, next) => {
-    res.send("Get all posts Route");
+    try {
+      const [posts, _] = await PostService.findAll();
+      res.status(200).json({ count: posts.length, posts });
+    } catch (error) {
+      next(error);
+    }
   };
 
   createNewPost = async (req, res, next) => {
