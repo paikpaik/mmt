@@ -7,7 +7,7 @@ class PostController {
 
   getAllPosts = async (req, res, next) => {
     try {
-      const [posts, _] = await PostService.findAll();
+      const posts = await this.postService.getAllPosts();
       res.status(200).json({ count: posts.length, posts });
     } catch (error) {
       next(error);
@@ -15,11 +15,26 @@ class PostController {
   };
 
   createNewPost = async (req, res, next) => {
-    res.send("create New Post Route");
+    const { title, content } = req.body;
+    try {
+      const result = await this.postService.createNewPost(title, content);
+      res.status(201).json({ message: "Post created successfully", result });
+    } catch (error) {
+      next(error);
+    }
   };
 
   getPostById = async (req, res, next) => {
-    res.send("Get Post By Id Route");
+    const { id } = req.params;
+    try {
+      const post = await this.postService.getPostById(id);
+      if (!post) {
+        return res.status(404).json({ message: "Post not found" });
+      }
+      res.status(200).json({ post });
+    } catch (error) {
+      next(error);
+    }
   };
 }
 

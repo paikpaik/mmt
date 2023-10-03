@@ -1,48 +1,39 @@
-const mysql = require("../config/mysql");
+const PostRepository = require("../database/mysql/post.repository");
 
 class PostService {
-  constructor(title, body) {
-    this.title = title;
-    this.body = body;
+  constructor() {
+    this.postRepository = new PostRepository();
+  }
+  async createNewPost(title, content) {
+    try {
+      const [result, _] = await this.postRepository.save(title, content);
+      return result;
+    } catch (error) {
+      throw error;
+    }
   }
 
-  save() {
-    let d = new Date();
-    let yyyy = d.getFullYear();
-    let mm = d.getMonth() + 1;
-    let dd = d.getDate();
-    let hour = d.getHours();
-    let min = d.getMinutes();
-    let sec = d.getSeconds();
-
-    let createdAtDate = `${yyyy}-${mm}-${dd} ${hour}:${min}:${sec}`;
-
-    let sql = `
-    INSERT INTO posts(
-      title,
-      body,
-      created_at
-    )
-    VALUES(
-      '${this.title}',
-      '${this.body}',
-      '${createdAtDate}'
-    )
-    `;
-
-    return mysql.execute(sql);
+  async getAllPosts() {
+    try {
+      const [posts, _] = await this.postRepository.findAll();
+      return posts;
+    } catch (error) {
+      throw error;
+    }
   }
 
-  static findAll() {
-    let sql = "SELECT * FROM posts;";
-
-    return mysql.execute(sql);
-  }
-
-  static findById(id) {
-    let sql = `SELECT * FROM posts WHERE id = ${id};`;
-
-    return mysql.execute(sql);
+  async getPostById(id) {
+    try {
+      const [post, _] = await this.postRepository.findById(id);
+      if (!post) {
+        const error = new Error("Post not found");
+        error.status = 404;
+        throw error;
+      }
+      return post;
+    } catch (error) {
+      throw error;
+    }
   }
 }
 
