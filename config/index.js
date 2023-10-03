@@ -16,4 +16,8 @@ module.exports = {
     password: process.env.DB_PASSWORD,
     database: process.env.DB_DATABASE,
   },
+  jwt: {
+    accessKey: process.env.ACCESS_TOKEN,
+    refreshKey: process.env.REFRESH_TOKEN,
+  },
 };

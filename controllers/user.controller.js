@@ -1,16 +1,8 @@
-class UserController {
-  constructor(userService) {
-    this.userService = userService;
-  }
+const UserService = require("../services/user.service");
 
-  async getUser(req, res, next) {
-    try {
-      const userId = req.params.userId;
-      const user = await this.userService.getUser(userId);
-      res.json(user);
-    } catch (error) {
-      next(error);
-    }
+class UserController {
+  constructor() {
+    this.userService = new UserService();
   }
 }
 

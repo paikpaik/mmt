@@ -1,6 +1,11 @@
 const mysql = require("../../config/mysql");
 
 class PostRepository {
+  constructor(title, body) {
+    this.title = title;
+    this.body = body;
+  }
+
   save(title, content) {
     const d = new Date();
     const yyyy = d.getFullYear();

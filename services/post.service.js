@@ -4,25 +4,25 @@ class PostService {
   constructor() {
     this.postRepository = new PostRepository();
   }
-  async createNewPost(title, content) {
+  createNewPost = async (title, content) => {
     try {
       const [result, _] = await this.postRepository.save(title, content);
       return result;
     } catch (error) {
       throw error;
     }
-  }
+  };
 
-  async getAllPosts() {
+  getAllPosts = async () => {
     try {
       const [posts, _] = await this.postRepository.findAll();
       return posts;
     } catch (error) {
       throw error;
     }
-  }
+  };
 
-  async getPostById(id) {
+  getPostById = async (id) => {
     try {
       const [post, _] = await this.postRepository.findById(id);
       if (!post) {
@@ -34,7 +34,7 @@ class PostService {
     } catch (error) {
       throw error;
     }
-  }
+  };
 }
 
 module.exports = PostService;
