@@ -1,21 +1,16 @@
 const mysql = require("../../config/mysql");
+const { createdAt } = require("../../utils/timestamp");
 
 class PostRepository {
-  constructor(title, body) {
+  constructor(title, body, database) {
     this.title = title;
     this.body = body;
+    this.createdAt = createdAt();
+    this.database = database || mysql;
   }
 
   save(title, content) {
-    const d = new Date();
-    const yyyy = d.getFullYear();
-    const mm = d.getMonth() + 1;
-    const dd = d.getDate();
-    const hour = d.getHours();
-    const min = d.getMinutes();
-    const sec = d.getSeconds();
-
-    const createdAtDate = `${yyyy}-${mm}-${dd} ${hour}:${min}:${sec}`;
+    const createdAt = this.createdAt;
 
     const sql = `
     INSERT INTO posts(
@@ -26,23 +21,23 @@ class PostRepository {
     VALUES(
       '${title}',
       '${content}',
-      '${createdAtDate}'
+      '${createdAt}'
     )
     `;
 
-    return mysql.execute(sql);
+    return this.database.execute(sql);
   }
 
   findAll() {
     const sql = "SELECT * FROM posts;";
 
-    return mysql.execute(sql);
+    return this.database.execute(sql);
   }
 
   findById(id) {
     const sql = `SELECT * FROM posts WHERE id = ${id};`;
 
-    return mysql.execute(sql);
+    return this.database.execute(sql);
   }
 }
 

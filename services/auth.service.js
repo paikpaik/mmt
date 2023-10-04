@@ -1,6 +1,7 @@
 const bcrypt = require("bcrypt");
 const UserRepository = require("../database/mysql/user.repository");
 const jwt = require("../utils/jwt");
+const config = require("../config");
 
 class AuthService {
   constructor() {
@@ -131,13 +132,13 @@ class AuthService {
     const status = new Returns();
     try {
       const match = await bcrypt.compare(password, foundUserData.password);
-      if (!match) {
-        return status.status400();
-      } else if (existRefreshToken) {
-        const verified = jwt.verifyToken(authToken, jwt.rsecretkey); // Use verifyToken from jwt.js
-        if (foundUserData.token == authToken && verified) {
+      if (!match) return status.status400();
+
+      if (existRefreshToken) {
+        const verified = jwt.verifyToken(authToken, config.jwt.refreshKey);
+        if (foundUserData.refreshToken == authToken && verified) {
           return status.status200();
-        } else if (foundUserData.token !== authToken || !verified) {
+        } else if (foundUserData.refreshToken !== authToken || !verified) {
           await this.userRepository.updateToken(email, refreshToken);
           return status.status201();
         } else if (authType !== "Bearer" || !authToken) {

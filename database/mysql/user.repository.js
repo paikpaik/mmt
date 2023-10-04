@@ -1,13 +1,21 @@
 const mysql = require("../../config/mysql");
+const { createdAt } = require("../../utils/timestamp");
+
 class UserRepository {
+  constructor() {
+    this.createdAt = createdAt();
+  }
+
   async authJoin(email, password, refreshToken, nick) {
     try {
-      const query = `INSERT INTO users (email, password, refreshToken, nick) VALUES (?, ?, ?, ?)`;
+      const createdAt = this.createdAt;
+      const query = `INSERT INTO users (email, password, refreshToken, nick, createdAt) VALUES (?, ?, ?, ?, ?)`;
       const [rows] = await mysql.execute(query, [
         email,
         password,
         refreshToken,
         nick,
+        createdAt,
       ]);
       return rows;
     } catch (error) {

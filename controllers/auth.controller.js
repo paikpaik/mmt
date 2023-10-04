@@ -32,6 +32,7 @@ class AuthController {
       console.log(existRefreshToken);
       const { status, accesscookie, refreshcookie, message } =
         await this.authService.authLogin(email, password, existRefreshToken);
+      console.log("A:", accesscookie, "B:", refreshcookie);
       if (accesscookie && refreshcookie) {
         res.cookie(accesscookie.name, accesscookie.token, {
           expiresIn: accesscookie.expiresIn,
